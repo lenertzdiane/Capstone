@@ -1,0 +1,80 @@
+p {
+  color: blue;
+}
+
+
+#container {
+  height: 80vw;
+  overflow: scroll;
+}
+#map {
+  height: 500px;
+}
+
+.text {
+  display: inline-block;
+  width: 30vw;
+  margin-left: 5vw;
+  font-size: 3vw;
+}
+
+#test {
+  color: red;
+}
+
+
+#map {
+  vertical-align: top;
+  display: inline-block;
+  width: 50vw;
+  position: fixed;
+  margin-left: 12vw;
+}
+body {
+       height: 100%;
+       width: 100%;
+   }
+   body {
+       margin: 0;
+   }
+   /* #map {
+       width: 100%;
+       height: 100%;
+   } */
+   svg {
+       position: relative;
+   }
+   /* path {
+       fill: yellow;
+       stroke-width: 2px;
+       stroke: red;
+       stroke-opacity: 1;
+   } */
+   /* .travelMarker {
+       fill: yellow;
+       opacity: 0.75;
+   } */
+   .points {
+       fill: red;
+       opacity: 1;
+   }
+   path {
+     fill: none;
+     stroke-width: 2px;
+     stroke: red;
+   }
+
+
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* } */
+/* .lines {
+
+   stroke: black;
+   opacity: 1;
+} */
