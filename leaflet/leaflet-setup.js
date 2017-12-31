@@ -1,5 +1,7 @@
 //SATURDAY:
 // code to scale animation for zooming // i think i just have to be able to reset lengths array and projectedArray before rendering just can't figure out where to do it
+// currently it resets itself to 0 have to figure out a way reset it at a transformation of the previous one
+
 // wrap render logic in functions
 // attach clickable markers to the map surrounding that have popups come up
 // go through and annotate this code
@@ -106,6 +108,19 @@ $(document).ready(function() {
       var newScrollTop = 0
 
       function reset() {
+
+        map.on("viewreset", change);
+        map.on("moveend", change);
+
+        function change() {
+          linePath
+          .style('stroke-dashoffset', function(d) {
+            return length - 0 + 'px';
+          })
+          .style('stroke-dasharray', length)
+          console.log('inchanges');
+        }
+
         // console.log('in reset');
         var bounds = path.bounds(incidents),
         topLeft = bounds[0],
@@ -150,6 +165,9 @@ $(document).ready(function() {
         let distance = 0
         let lengthsArray =[]
 
+        projectedArray = projectedArray.slice((projectedArray.length - 7), (projectedArray.length))
+
+
 
         var getDistance = function getDistance(point1, point2) {
           var xs = 0;
@@ -179,7 +197,6 @@ $(document).ready(function() {
             return 0
           }
           else {
-            console.log('in here');
             return $('#'+number).position().top + scrollTop - ($(window).innerHeight())
           }
         }
@@ -188,9 +205,9 @@ $(document).ready(function() {
           if(number === 0){
             return 0
           } else {
-          return $('.last' + number).position().top + scrollTop - ($(window).innerHeight())
+            return $('.last' + number).position().top + scrollTop - ($(window).innerHeight())
+          }
         }
-      }
 
         function makeSegLength(lengthsArray, number) {
           let total = 0
@@ -201,6 +218,7 @@ $(document).ready(function() {
             for (let i = 0; i < number; i ++){
               total = total + lengthsArray[i]
             }
+            console.log(lengthsArray);
             return total
           }
         }
@@ -223,7 +241,6 @@ $(document).ready(function() {
 
         var render = function() {
           if (scrollTop !== newScrollTop) {
-            console.log(scrollTop);
             scrollTop = newScrollTop
             if($('.last1').position().top > $(window).innerHeight()) {
               console.log('in one');
@@ -275,7 +292,7 @@ $(document).ready(function() {
             }
 
           }
-          window.requestAnimationFrame(render)
+          window.requestAnimationFrame(reset)
         }
 
         window.requestAnimationFrame(render)
