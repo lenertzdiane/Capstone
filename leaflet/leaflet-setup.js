@@ -1,5 +1,3 @@
-// TODO XMAS:
-
 //SATURDAY:
 // code to scale animation for zooming // i think i just have to be able to reset lengths array and projectedArray before rendering just can't figure out where to do it
 // wrap render logic in functions
@@ -137,6 +135,7 @@ $(document).ready(function() {
         //   map.latLngToLayerPoint(new L.LatLng(y, x)).y + ")";
         // });
         // Setting the size and location of the overall SVG container
+
         svg.attr("width", bottomRight[0] - topLeft[0] + 120)
         .attr("height", bottomRight[1] - topLeft[1] + 120)
         .style("left", topLeft[0] - 50 + "px")
@@ -173,68 +172,47 @@ $(document).ready(function() {
         }
 
         ///////////// ANIMATIONS
-        let testPosition = $('#1').position().top- ($(window).innerHeight() * .95)
-        let segLength = lengthsArray[0]
         let length = linePath.node().getTotalLength()
 
-        let testPosition2 = $('#2').position().top - ($(window).innerHeight() * .95)
-        let segLength2 = lengthsArray[0] + lengthsArray[1]
+        function makeTestPosition(scrollTop, number) {
+          if(number === 0) {
+            return 0
+          }
+          else {
+            console.log('in here');
+            return $('#'+number).position().top + scrollTop - ($(window).innerHeight())
+          }
+        }
 
-        let testPosition3 = $('#3').position().top - ($(window).innerHeight() * .95)
-        let segLength3 = lengthsArray[0] + lengthsArray[1] + lengthsArray[2]
+        function makeLastTestPosition(scrollTop, number) {
+          if(number === 0){
+            return 0
+          } else {
+          return $('.last' + number).position().top + scrollTop - ($(window).innerHeight())
+        }
+      }
 
-        let testPosition4 = $('#4').position().top - ($(window).innerHeight() * .95)
-        let segLength4 = lengthsArray[0] + lengthsArray[1] + lengthsArray[2] + lengthsArray[3]
+        function makeSegLength(lengthsArray, number) {
+          let total = 0
+          if(number === 0) {
+            return 0
+          }
+          else {
+            for (let i = 0; i < number; i ++){
+              total = total + lengthsArray[i]
+            }
+            return total
+          }
+        }
 
-        let testPosition5 = $('#5').position().top - ($(window).innerHeight() * .95)
-        let segLength5 = lengthsArray[0] + lengthsArray[1] + lengthsArray[2] + lengthsArray[3] + lengthsArray[4]
 
-        let testPosition6 = $('#6').position().top - ($(window).innerHeight() * .95)
-        let segLength6 = lengthsArray[0] + lengthsArray[1] + lengthsArray[2] + lengthsArray[3] + lengthsArray[4] + lengthsArray[5]
-
-        //var makeTestPosition(number) = $('#' number).position().top - ($(window).innerHeight() * .95)
-        //var makeLastTestPosition(number) = $('.last' number).position.top - ($(window).innerHeight()
-        //var makeSegLength(number) = recursive function to sum the lengths array starting with lengthsArray[num-1]
-
-        //maybe i will have to make a method to populate this like with all the different test positions
-        //and all the lengths where the nodes are
-
-        //maybe until range is the length, keep chaning domain and range, range will be each of the lengths added one after the other
-
-        //function makeLinePathScale(number) = d3.scale.linear()
-        //.domain([makeLastTestPosition(number-1), makeTestPosition(number)])
-        //.range([makeSegLength(number-1), makeSegLength])
-        //.clamp(true)
-
-        var linePathScale = d3.scale.linear()
-        .domain([0, testPosition])
-        .range([0, segLength])
-        .clamp(true);
-
-        var linePathScale2 = d3.scale.linear()
-        .domain([$('.last1').position().top - ($(window).innerHeight() * .95), testPosition2])
-        .range([segLength, segLength2])
-        .clamp(true);
-
-        var linePathScale3 = d3.scale.linear()
-        .domain([$('.last2').position().top - ($(window).innerHeight() * .95), testPosition3])
-        .range([segLength2, segLength3])
-        .clamp(true);
-
-        var linePathScale4 = d3.scale.linear()
-        .domain([$('.last3').position().top - ($(window).innerHeight() * .95), testPosition4])
-        .range([segLength3, segLength4])
-        .clamp(true);
-
-        var linePathScale5 = d3.scale.linear()
-        .domain([$('.last4').position().top - ($(window).innerHeight() * .95), testPosition5])
-        .range([segLength4, segLength5])
-        .clamp(true);
-
-        var linePathScale6 = d3.scale.linear()
-        .domain([$('.last5').position().top - ($(window).innerHeight() * .95), testPosition6])
-        .range([segLength5, segLength6])
-        .clamp(true);
+        function makeLinePathScale(scrollTop, number){
+          var linePathScale = d3.scale.linear()
+          .domain([makeLastTestPosition(scrollTop, number-1), makeTestPosition(scrollTop, number)])
+          .range([makeSegLength(lengthsArray, number-1), makeSegLength(lengthsArray, number)])
+          .clamp(true);
+          return linePathScale(scrollTop)
+        }
 
         container = d3.select('#container')
 
@@ -245,16 +223,13 @@ $(document).ready(function() {
 
         var render = function() {
           if (scrollTop !== newScrollTop) {
-
-            console.log(projectedArray);
-            console.log(lengthsArray);
-
+            console.log(scrollTop);
             scrollTop = newScrollTop
             if($('.last1').position().top > $(window).innerHeight()) {
               console.log('in one');
               linePath
               .style('stroke-dashoffset', function(d) {
-                return length - linePathScale(scrollTop) + 'px';
+                return length - makeLinePathScale(scrollTop, 1) + 'px';
               })
               .style('stroke-dasharray', length)
             }
@@ -263,7 +238,7 @@ $(document).ready(function() {
               console.log('in two');
               linePath
               .style('stroke-dashoffset', function(d) {
-                return length - linePathScale2(scrollTop) + 'px';
+                return length - makeLinePathScale(scrollTop, 2) + 'px';
               })
             }
 
@@ -271,7 +246,7 @@ $(document).ready(function() {
               console.log('in threeeeee');
               linePath
               .style('stroke-dashoffset', function(d) {
-                return length - linePathScale3(scrollTop) + 'px';
+                return length - makeLinePathScale(scrollTop, 3) + 'px';
               })
             }
 
@@ -279,7 +254,7 @@ $(document).ready(function() {
               console.log('in four');
               linePath
               .style('stroke-dashoffset', function(d) {
-                return length - linePathScale4(scrollTop) + 'px';
+                return length - makeLinePathScale(scrollTop, 4) + 'px';
               })
             }
 
@@ -287,7 +262,7 @@ $(document).ready(function() {
               console.log('in five');
               linePath
               .style('stroke-dashoffset', function(d) {
-                return length - linePathScale5(scrollTop) + 'px';
+                return length - makeLinePathScale(scrollTop, 5) + 'px';
               })
             }
 
@@ -295,7 +270,7 @@ $(document).ready(function() {
               console.log('in six');
               linePath
               .style('stroke-dashoffset', function(d) {
-                return length - linePathScale6(scrollTop) + 'px';
+                return length - makeLinePathScale(scrollTop, 6) + 'px';
               })
             }
 
