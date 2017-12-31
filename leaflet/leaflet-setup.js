@@ -1,11 +1,11 @@
 //SATURDAY:
 // code to scale animation for zooming // i think i just have to be able to reset lengths array and projectedArray before rendering just can't figure out where to do it
 // currently it resets itself to 0 have to figure out a way reset it at a transformation of the previous one
-
 // wrap render logic in functions
 // attach clickable markers to the map surrounding that have popups come up
 // go through and annotate this code
 // marker that also moves?
+// NEED TO REORGANIZE THIS CODE
 
 //Phase 2:
 // ======================================================= Get the line to animate between points on scroll scrollTop
@@ -104,10 +104,24 @@ $(document).ready(function() {
       map.on("viewreset", reset);
       map.on("moveend", reset);
 
+
+
       var scrollTop = 0
       var newScrollTop = 0
 
       function reset() {
+
+        container = d3.select('#container')
+
+        container.on ("scroll", function() {
+          newScrollTop = container.node().scrollTop;
+        });
+
+
+        // console.log('in reset');
+        var bounds = path.bounds(incidents),
+        topLeft = bounds[0],
+        bottomRight = bounds[1]
 
         map.on("viewreset", change);
         map.on("moveend", change);
@@ -118,13 +132,9 @@ $(document).ready(function() {
             return length - 0 + 'px';
           })
           .style('stroke-dasharray', length)
-          console.log('inchanges');
+          //THIS IS A DIRTY HACK!
+          scrollTop = scrollTop +1
         }
-
-        // console.log('in reset');
-        var bounds = path.bounds(incidents),
-        topLeft = bounds[0],
-        bottomRight = bounds[1];
 
 
         // console.log(topLeft);
@@ -192,6 +202,10 @@ $(document).ready(function() {
         ///////////// ANIMATIONS
         let length = linePath.node().getTotalLength()
 
+
+
+
+
         function makeTestPosition(scrollTop, number) {
           if(number === 0) {
             return 0
@@ -232,11 +246,7 @@ $(document).ready(function() {
           return linePathScale(scrollTop)
         }
 
-        container = d3.select('#container')
 
-        container.on ("scroll", function() {
-          newScrollTop = container.node().scrollTop;
-        });
 
 
         var render = function() {
