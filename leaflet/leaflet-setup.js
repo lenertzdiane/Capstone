@@ -2,12 +2,12 @@
 // ======================================================= code to scale animation for zooming // i think i just have to be able to reset lengths array and projectedArray before rendering just can't figure out where to do it
 // ======================================================= currently it resets itself to 0 have to figure out a way reset it at a transformation of the previous one
 // ======================================================= wrap render logic in functions
-// attach clickable markers to the map surrounding that have popups come up
-
-// go through and annotate this code
-// marker that also moves?
+// ======================================================= attach clickable markers to the map surrounding that have popups come up
 
 // NEED TO REORGANIZE THIS CODE
+// go through and annotate this code
+// ======================================================= marker that also moves?
+
 
 //Phase 2:
 // ======================================================= Get the line to animate between points on scroll scrollTop
@@ -38,10 +38,23 @@ $(document).ready(function() {
     accessToken: 'pk.eyJ1IjoibGVuZXJ0emQiLCJhIjoiY2pibDFhdHdpMHY2NDJxcWtrZjZodWlidSJ9.fBjof9UOXV117fVfw2H8vA'
   }).addTo(map);
 
-  //position gives us the relative position of an element to the top of its parent div in pixels (#test is a span in our ps)
-  //the - window.innerheight bit is so that we get the pixels for the first moment it shows on screen when scrolling, not the last
-  //scrollTop() gives us the position of the scrollbar
+//POPUPS
+  function addDataToMap(data, map) {
+      var dataLayer = L.geoJson(data);
+      dataLayer.addTo(map);
+  }
 
+  $.getJSON("http://localhost:8080/popups.geojson", function(data) {
+    addDataToMap(data, map)
+      var dataLayer = L.geoJson(data, {
+        onEachFeature: function(feature, layer) {
+          var popupText = "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit</p>  "
+         + feature.geometry.coordinates;
+          layer.bindPopup(popupText);
+        }
+      });
+      dataLayer.addTo(map)
+  });
 
   // D3.JSON //////////////////////////////////////////////////// D3.JSON START //////////////////////////////////////
 
@@ -96,7 +109,7 @@ $(document).ready(function() {
     .attr("id", "marker")
     .attr("class", "travelMarker");
 
-    
+
 
     reset();
     map.on("viewreset", reset);

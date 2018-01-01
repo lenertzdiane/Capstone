@@ -1,0 +1,27 @@
+{
+  "name": "capstone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node leaflet/leaflet-setup.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lenertzdiane/Capstone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lenertzdiane/Capstone/issues"
+  },
+  "homepage": "https://github.com/lenertzdiane/Capstone#readme",
+  "dependencies": {
+    "connect": "^3.6.5",
+    "express": "^4.16.2",
+    "serve-static": "^1.13.1"
+  },
+  "devDependencies": {},
+  "keywords": []
+}
