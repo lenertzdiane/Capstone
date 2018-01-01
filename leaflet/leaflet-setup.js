@@ -96,6 +96,8 @@ $(document).ready(function() {
     .attr("id", "marker")
     .attr("class", "travelMarker");
 
+    
+
     reset();
     map.on("viewreset", reset);
     map.on("moveend", reset);
